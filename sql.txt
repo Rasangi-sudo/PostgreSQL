@@ -1,0 +1,29 @@
+CREATE TABLE ArtistTable ( 
+artist_id serial primary key, 
+f_name VARCHAR(50) NOT NULL, 
+l_name VARCHAR(50) NOT NULL, 
+website VARCHAR(100) 
+);
+
+CREATE TABLE AlbumTable ( 
+album_id serial primary key, 
+album_name VARCHAR(100) NOT NULL, 
+genre VARCHAR(100) NOT NULL, 
+number_of_tracks INTEGER NOT NULL,
+artist_id serial REFERENCES ArtistTable(artist_id)
+);
+
+CREATE TABLE CustomerTable ( 
+customer_id serial primary key, 
+f_name VARCHAR(50) NOT NULL, 
+l_name VARCHAR(50) NOT NULL,
+contact_number INTEGER NOT NULL,
+email VARCHAR(100)
+);
+
+CREATE TABLE PurchasesTable (  
+date date NOT NULL,
+customer_id serial REFERENCES CustomerTable(customer_id),
+album_id serial REFERENCES AlbumTable(album_id),
+PRIMARY KEY (customer_id,album_id)
+);

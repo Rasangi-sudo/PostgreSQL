@@ -1,0 +1,8 @@
+INSERT INTO ArtistTable VALUES (1, 'Ed', 'Sheeran', 'www.ed.com');
+INSERT INTO ArtistTable VALUES (2, 'Andre', 'Rieu', 'www.ar.com' );
+INSERT INTO ArtistTable VALUES (3, 'Chris', 'Stapleton', 'www.cs.com'); 
+INSERT INTO ArtistTable VALUES (4, 'Gabby', 'Barrentt', 'www.gb.com' );
+INSERT INTO ArtistTable VALUES (5, 'Ben', 'Mazue', 'www.bm.com'); 
+INSERT INTO ArtistTable VALUES (6, 'Pearl', 'Jam', 'www.pj.com');   
+INSERT INTO ArtistTable VALUES (7, 'Shaka', 'Ponk', 'www.sp.com');
+INSERT INTO ArtistTable VALUES (8, 'Justin', 'Bieber', 'www.jb.com');

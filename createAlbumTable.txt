@@ -1,0 +1,12 @@
+INSERT INTO AlbumTable VALUES (1, 'Divide', 'Romantic', 10, 1);
+INSERT INTO AlbumTable VALUES (2, 'Holiday', 'Pop', 13, 2);
+INSERT INTO AlbumTable VALUES (3, 'Traveler', 'Jazz', 15, 2); 
+INSERT INTO AlbumTable VALUES (4, 'Goldmine', 'Hip-hop', 7, 3);
+INSERT INTO AlbumTable VALUES (5, 'Live', 'Rock', 11, 4); 
+INSERT INTO AlbumTable VALUES (6, 'Paradise', 'Blue', 3, 5);   
+INSERT INTO AlbumTable VALUES (7, 'Gigaton', 'Rhythm', 15, 5);
+INSERT INTO AlbumTable VALUES (8, 'Apologies', 'Pop', 50, 5);
+INSERT INTO AlbumTable VALUES (9, 'People', 'Rock', 10, 6);
+INSERT INTO AlbumTable VALUES (10, 'Groove', 'Blue', 5, 7);
+INSERT INTO AlbumTable VALUES (11, 'Hustle', 'Techno', 25, 8); 
+INSERT INTO AlbumTable VALUES (12, 'Discover', 'Electro', 30, 8);

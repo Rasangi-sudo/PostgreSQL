@@ -1,0 +1,8 @@
+INSERT INTO CustomerTable VALUES (1, 'John', 'Poll', 61372345, 'jp@hotmail.com');
+INSERT INTO CustomerTable VALUES (2, 'Umith', 'Ron', 61353489, 'ur@hotmail.com' );
+INSERT INTO CustomerTable VALUES (3, 'Sarah', 'Brown', 61362539, 'sb@hotmail.com'); 
+INSERT INTO CustomerTable VALUES (4, 'Linda', 'Jodoin', 61329470, 'lj@hotmail.com' );
+INSERT INTO CustomerTable VALUES (5, 'Laurance', 'Philip', 61372740, 'lp@hotmail.com'); 
+INSERT INTO CustomerTable VALUES (6, 'Peter', 'Pan', 61377230, 'pp@hotmail.com');   
+INSERT INTO CustomerTable VALUES (7, 'April', 'Kate', 61304836, 'ak@hotmail.com');
+INSERT INTO CustomerTable VALUES (8, 'Julie', 'Marlot', 61378451, 'jm@hotmail.com');

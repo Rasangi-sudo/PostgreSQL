@@ -1,0 +1,162 @@
+#!/usr/bin/python3
+import psycopg2
+import sys
+import datetime
+global cursor
+		
+try:
+	connection=psycopg2.connect(database='cdstore_disa0017', user='cdstore')
+except psycopg2.DatabaseError:
+	print("Error: Connection to database not established.")
+	sys.exit(1) # early exit if DB not available
+else:
+	print("Database connection established")
+	cursor = connection.cursor()
+
+
+
+def display_menu():
+	print("-------------------------------------------------------------------------------")
+	print("| 1 - To Display Album name sorted by name            		             |")
+	print("| 2 - To Display Album name and genre that sorted by genre                    |")
+	print("| 3 - To Display Album name, genre and artist name that sorted by artist_name |")
+	print("| 4 - To Display all purchases of a customer                                  |")
+	print("| 5 - To insert a purchase record                                             |")
+	print("| 6 - To Exit                                                                 |")
+	print("-------------------------------------------------------------------------------")
+	return 0
+
+def get_menu_selection(selection):
+	try:
+		selection = input("please enter your selection from menu(1/2/3/4/5/6): ")		
+
+	except Exception:
+		print("Please enter a valid selection!")
+	return selection
+
+
+#----------------------------------------------------------------------------------------
+
+def get_artist_name():
+	artist_name = input("Enter the Artist first and Last name: ")
+	return(artist_name)
+
+def get_customer_email():
+	email = input("Enter your email: ")
+	return(email)
+
+def get_album_name():
+	album = input("Enter the album name: ")
+	return(album)
+#----------------------------------------------------------------------------------------
+
+def query_customerid(email):
+	sql_query = "SELECT customer_id FROM CustomerTable WHERE email = %s"
+	sql_data = (email,)
+	cursor.execute(sql_query, sql_data)
+	customer_id = cursor.fetchone()
+	return (customer_id)
+
+def query_albumid(album):
+	sql_query = "SELECT album_id FROM AlbumTable WHERE album_name = %s"
+	sql_data = (album,)
+	cursor.execute(sql_query, sql_data)
+	album_id = cursor.fetchone()
+	return (album_id)
+
+#----------------------------------------------------------------------------------------	
+
+def query_album_byname():
+	cursor.execute("SELECT album_name FROM AlbumTable ORDER BY album_name ")
+	print("  album_name")
+	print("---------------")
+	tuple = cursor.fetchone()
+	while tuple is not None:
+		print(tuple)
+		tuple = cursor.fetchone()
+	return 0
+
+
+def query_album_bygenre():
+	cursor.execute("SELECT genre, album_name FROM AlbumTable ORDER BY genre ")
+	rows = cursor.fetchall()
+	print("genre  -  album_name")
+	print("-------------------")
+	for row in rows:
+		print(row[0], "-", row[1])
+	return 0
+
+def query_album_artist(artist_name):
+	sql_query = "SELECT concat(ar.f_name,' ',l_name) as artist_name, al.genre, al.album_name FROM AlbumTable al INNER JOIN ArtistTable ar ON ar.artist_ID = al.artist_ID WHERE concat(ar.f_name,' ',l_name) = %s ORDER BY artist_name"
+	sql_data = (artist_name,)
+	cursor.execute(sql_query, sql_data)
+	rows = cursor.fetchall()
+	print(" artist_name  -  genre  -  album_name")
+	print("--------------------------------------")
+	for row in rows:
+		print(row[0], "-", row[1], "-", row[2])
+	return 0
+	
+
+def query_customer_purchase(email):
+	sql_query = "SELECT ps.date, concat(cus.f_name,' ',cus.l_name),cus.email, al.album_name, concat(ar.f_name,' ',ar.l_name) FROM PurchasesTable ps JOIN CustomerTable cus ON cus.customer_id = ps.customer_id JOIN AlbumTable al ON al.album_id = ps.album_id JOIN ArtistTable ar ON al.artist_id = ar.artist_id WHERE cus.email = %s "
+	sql_data = (email,)
+	cursor.execute(sql_query, sql_data)
+	rows = cursor.fetchall()
+	print("date  -  Customer_name  -  email  -  Album_name  -  Artist_name")
+	print("-------------------")
+	for row in rows:
+		print(row[0], "-", row[1], "-", row[2], "-", row[3], "-", row[4])
+	return 0
+
+def insertion(customer_id, album_id):
+	date = datetime.datetime.now().date()
+	sql_query = "INSERT INTO PurchasesTable VALUES (%s, %s, %s); "
+	sql_data = (date, customer_id, album_id,)
+	cursor.execute(sql_query, sql_data)
+	connection.commit()
+	print ("Your Puechase Insertion is successfull")
+	return 0
+
+#main_loop
+start = input("Do you want to see the menu(y/n): ")
+selection = ""
+while start ==	"y":	
+	display_menu()
+	selection = get_menu_selection(selection)
+	if selection == "1":
+		query_album_byname()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "2":	
+		query_album_bygenre()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "3":	
+		artist_name = get_artist_name()
+		query_album_artist(artist_name)
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "4":
+		email = get_customer_email()
+		query_customer_purchase(email)
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "5":
+		email = get_customer_email()
+		customer_id = query_customerid(email)
+		album = get_album_name()
+		album_id = query_albumid(album)
+		insertion(customer_id, album_id)
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "6":
+		break
+	else:
+		print("Please enter a valid input!")
+		start == input("Do you want to start again(y/n): ")
+		if start == "n":
+			break
+		
+print("Bye!")
+cursor.close()
+connection.close()
+
+
+	
+	

@@ -1,0 +1,117 @@
+#!/usr/bin/python3
+import psycopg2
+import sys
+import datetime
+global cursor
+		
+try:
+	connection=psycopg2.connect(database='cdstore_disa0017', user='cdstore')
+except psycopg2.DatabaseError:
+	print("Error: Connection to database not established.")
+	sys.exit(1) # early exit if DB not available
+else:
+	print("Database connection established")
+	cursor = connection.cursor()
+
+
+
+def display_menu():
+	print("-------------------------------------------------------------------------------")
+	print("| 1 - To insert a purchase record                                             |")
+	print("| 2 - To Display Album name and genre that sorted by name                     |")
+	print("| 3 - To Display Album name and genre that sorted by genre                    |")
+	print("| 4 - To Display Album name, genre and artist name that sorted by artist_name |")
+	print("| 5 - To Display all purchases of a customer                                  |")
+	print("| 6 - To Exit                                                                 |")
+	print("-------------------------------------------------------------------------------")
+	return 0
+
+def get_menu_selection(selection):
+	try:
+		selection = input("please enter your selection from menu(1/2/3/4/5/6): ")		
+
+	except Exception:
+		print("Please enter a valid selection!")
+	return selection
+
+
+def option1():
+	user_id = input("Enter the user_id: ")
+	album_id = input("Enter the album_id: ")
+	date = datetime.datetime.now().date()
+	sql_query = "INSERT INTO PurchasesTable VALUES (%s, %s, %s); "
+	sql_data = (date, user_id, album_id,)
+	cursor.execute(sql_query, sql_data)
+	connection.commit()
+	print ("Your Insertion is successfull")
+
+def option2():
+	cursor.execute("SELECT album_name, genre FROM AlbumTable ORDER BY album_name;")
+	rows = cursor.fetchall()
+	print("album_name  -  genre")
+	print("-------------------")
+	for row in rows:
+		print(row[0], "-", row[1])
+
+def option3():
+	cursor.execute("SELECT genre, album_name FROM AlbumTable ORDER BY genre;")
+	rows = cursor.fetchall()
+	print("genre  -  album_name")
+	print("-------------------")
+	for row in rows:
+		print(row[0], "-", row[1])
+
+def option4():
+	cursor.execute("SELECT concat(ar.f_name,' ',l_name) as artist_name, al.genre, al.album_name FROM AlbumTable al INNER 							JOIN ArtistTable ar ON ar.artist_ID = al.artist_ID ORDER BY artist_name;")
+	rows = cursor.fetchall()
+	print("artist_name  -  genre  -  album_name")
+	print("-------------------")
+	for row in rows:
+		print(row[0], "-", row[1], "-", row[2])
+
+def option5():
+	cursor.execute("SELECT ps.date, concat(cus.f_name,' ',cus.l_name),cus.email, al.album_name, concat(ar.f_name,' ',ar.l_name) FROM PurchasesTable ps JOIN CustomerTable cus ON cus.customer_id = ps.customer_id JOIN AlbumTable al ON al.album_id = ps.album_id JOIN ArtistTable ar ON al.artist_id = ar.artist_id;")
+	rows = cursor.fetchall()
+	print("date  -  Customer_name  -  email  -  Album_name  -  Artist_name")
+	print("-------------------")
+	for row in rows:
+		print(row[0], "-", row[1], "-", row[2], "-", row[3], "-", row[4])
+
+
+
+
+#main loop
+start = input("Do you want to see the menu(y/n): ")
+selection = ""
+while start ==	"y":	
+	display_menu()
+	selection = get_menu_selection(selection)
+	if selection == "1":
+		option1()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "2":	
+		option2()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "3":	
+		option3()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "4":
+		option4()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "5":
+		option5()
+		start = input("Do you want to see the menu again(y/n): ")
+	elif selection == "6":
+		start = input("Do you want to see the menu again(y/n): ")
+	else:
+		print("Please enter a valid input!")
+		start == input("Do you want to start again(y/n): ")
+		if start == "n":
+			break
+	
+print("bye!")		
+cursor.close()
+connection.close()
+
+
+	
